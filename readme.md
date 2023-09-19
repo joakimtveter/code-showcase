@@ -2,6 +2,81 @@
 
 I have found some code snippets from my projects that i think demonstrates my current skill level.
 
+## API Call function
+
+This is how I set up my API calls in my school projects. By creating these functions I can easily make API calls with all query paremeter options in a optional options object.
+I make one of these for each endpoint in the API.
+
+### Basic Reusable get function with access token
+
+```js
+import { showToast, getAccessToken } from '../utils.js';
+import { BASE_URL } from '../client.js';
+
+/**
+ * Generic function to get data from API, includes access token in header and error handeling.
+ * @param {string} endpoint - API endpoint including query parameters and leadning slash
+ * @returns {Promise<object[]>}
+ */
+export async function get(endpoint) {
+    const token = getAccessToken();
+    try {
+        const response = await fetch(BASE_URL + endpoint, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(`${error.statusCode} ${error.status} - ${error.errors[0].message}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        showToast(error, 'error');
+    }
+}
+```
+
+### Example API call that gives autocomplete suggestions
+
+```js
+import { get } from '../get';
+
+/**
+ * Get listings from the API
+ * @param {Object} options - Options for the query
+ * @param {string} options.sort - The field to sort by
+ * @param {string} options.sortOrder - The order to sort by
+ * @param {number} options.limit - The number of listings to return
+ * @param {number} options.offset - The offset to start from
+ * @param {string} options.tag - The tag to filter by
+ * @param {boolean} options.active - Whether to return only active listings
+ * @param {boolean} options.seller - Whether to add seller object to listing
+ * @param {boolean} options.bids - Whether to add bids array to listing
+ * @returns {Promise<Object[]>} - A promise that resolves to an array of listings
+ */
+export function getListings(options = {}) {
+    let queryParams = '';
+    const parameters = [];
+
+    if (options.sort) parameters.push(`sort=${options.sort}`);
+    if (options.sortOrder) parameters.push(`sortOrder=${options.sortOrder}`);
+    if (options.limit) parameters.push(`limit=${options.limit}`);
+    if (options.offset) parameters.push(`offset=${options.offset}`);
+    if (options.tag) parameters.push(`_tag=${options.tag}`);
+    if (options.active) parameters.push(`_active=${options.active}`);
+    if (options.seller) parameters.push(`_seller=${options.seller}`);
+    if (options.bids) parameters.push(`_bids=${options.bids}`);
+
+    if (parameters.length > 0) queryParams = '?' + parameters.join('&');
+    return get(`/listings${queryParams}`);
+}
+```
+
 ## Mulitple choice feedback question with exclusive answers
 
 This code was part of a feedback form prototype for a client. The client is moving forward with the project and the code will be used in the final product.
