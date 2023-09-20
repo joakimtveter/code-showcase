@@ -1,6 +1,64 @@
 # Code showcase
 
-I have found some code snippets from my projects that i think demonstrates my current skill level.
+I have found some code snippets from my projects that I think demonstrates my current skill level.
+
+## Vanilla JS Utility functions
+
+### Update the query string in the URL without reloading the page
+
+```js
+/**
+ * Set mulitple query parameters and values in the URL query string without reloading the page
+ * @param {object} [parameters] - object with key value pairs of parameters and values, no parameters will remove all parameters.
+ * @returns {void} Sets the value of a parameter in the URL query string
+ */
+export function setUrlParametersWithoutReload(parameters = {}) {
+    const currentPath = window.location.pathname;
+    if (Object.keys(parameters).length === 0) {
+        window.history.pushState({}, '', currentPath);
+    } else {
+        let queryparams = [];
+        Object.entries(parameters).forEach(([key, value]) => {
+            queryparams.push(`${key}=${value}`);
+        });
+
+        window.history.pushState({}, '', currentPath + '?' + queryparams.join('&'));
+    }
+}
+```
+
+### Get the value of a query parameter from the URL
+
+```js
+/**
+ * Get the value of a parameter from the URL query string
+ * @param {string} parameter Url parameter to get the value from
+ * @returns {string} Value of the parameter
+ */
+export function getValueFromURLParameter(parameter) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(parameter);
+}
+```
+
+### Format date for vanilla HTLM date picker
+
+```js
+/**
+ * Formats a date object to a string that can be used in a date input field
+ * @param {object} date - a date object
+ * @returns - a string formatted for the datepicker
+ */
+
+export function formatDateforDatepicker(date) {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    const hours = ('0' + date.getHours()).slice(-2);
+    const minutes = ('0' + date.getMinutes()).slice(-2);
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+```
 
 ## API Call function
 
@@ -8,6 +66,9 @@ This is how I set up my API calls in my school projects. By creating these funct
 I make one of these for each endpoint in the API.
 
 ### Basic Reusable get function with access token
+
+THis lets me make athenticated calls without having to get the access token every time.
+This example is from a social media app that required authentication to get data from the API.
 
 ```js
 import { showToast, getAccessToken } from '../utils.js';
@@ -43,6 +104,8 @@ export async function get(endpoint) {
 
 ### Example API call that gives autocomplete suggestions
 
+Im my next school project I will use TypeScript, but since this is from the JavaScript 2 course I documented the function with JSDoc.
+
 ```js
 import { get } from '../get';
 
@@ -77,12 +140,15 @@ export function getListings(options = {}) {
 }
 ```
 
-## Mulitple choice feedback question with exclusive answers
+## Mulitple choice survey question with exclusive answers
 
-This code was part of a feedback form prototype for a client. The client is moving forward with the project and the code will be used in the final product.
-The stack was Vite, React, React Router, Formik, and Material UI. The prodotype used Firebase as a backend to store the form submissons. The final product will use an excisting .NET platform to generate questions and store the result.
+This code was part of a feedback survey prototype for a client. The client is moving forward with the project and the code will be used in the final product.
+The stack was Vite, React, React Router, Formik, and Material UI. The prodotype used Firebase as a backend to store the form submissons. The final product will use an excisting dotNET platform to generate questions and store the results.
 
 ### Custom Checkbox component
+
+The component is wraped with Formik useField hook to get access to the formik state and helpers.
+This is the best way I have found to make Formik and Material UI work together.
 
 ```js
 import { useField } from 'formik';
@@ -146,6 +212,35 @@ export default function FormikCheckbox({ label, exclusive, exclusiveOptions, ...
 ```
 
 ### Component in use
+
+This is how the question data is structured.
+
+```js
+const survey = [
+    {
+        key: 'experience',
+        type: 'checkbox',
+        initialValue: [],
+        preText: 'Fortell litt om din opplevelse.',
+        question: 'Var dette en opplevelse der du brukte...',
+        helptext: 'Du kan krysse av på flere',
+        options: [
+            { icon: 'head', label: 'Hodet', helptext: 'for å tenke og undre meg' },
+            { icon: 'eyes', label: 'Øynene', helptext: 'til å observere' },
+            { icon: 'ears', label: 'Hørsel', helptext: 'for å lytte' },
+            { icon: 'feelings', label: 'Følelsene', helptext: 'til å leve meg inn' },
+            { icon: 'body', label: 'Hele kroppen', helptext: 'til å bevege meg' },
+            { icon: 'voice', label: 'Stemmen', helptext: 'til å uttrykke meg' },
+            { icon: 'hands', label: 'Hendene', helptext: 'til å lage ting selv' },
+            { icon: 'laugh', label: 'Lattermusklene', helptext: 'til å le' },
+            { icon: 'imagination', label: 'Fantasien', helptext: 'til å drømme med' },
+            { icon: 'none', label: 'Ingen av delene passer' },
+        ],
+    },
+];
+```
+
+And this is how the component in use.
 
 ```js
 import React from 'react';
