@@ -128,7 +128,8 @@ export async function get(endpoint) {
 
 ### Example API call that gives autocomplete suggestions
 
-Im my next school project I will use TypeScript, but since this is from the JavaScript 2 course I documented the function with JSDoc.
+In my next school project I will use TypeScript, but since this is from the JavaScript 2 course I documented the function with JSDoc.
+In TypeScript i could set the sort order type to `asc | desc` to get even better autocompletion.
 
 ```js
 import { get } from '../get';
