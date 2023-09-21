@@ -259,7 +259,7 @@ const survey = [
             { icon: 'hands', label: 'Hendene', helptext: 'til å lage ting selv' },
             { icon: 'laugh', label: 'Lattermusklene', helptext: 'til å le' },
             { icon: 'imagination', label: 'Fantasien', helptext: 'til å drømme med' },
-            { icon: 'none', label: 'Ingen av delene passer' },
+            { icon: 'none', label: 'Ingen av delene passer', exclusive: true },
         ],
     },
 ];
