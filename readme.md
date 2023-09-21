@@ -65,7 +65,7 @@ export function getValueFromURLParameter(parameter) {
 }
 ```
 
-### Format date for vanilla HTLM date picker
+### Format date for vanilla HTML date picker
 
 ```js
 /**
